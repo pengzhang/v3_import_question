@@ -30,17 +30,18 @@ public class Question {
 	 */
 	public static String[] parseText(String file) throws IOException {
 		String questions = FileUtils.readFileToString(new File(file), "utf-8");
+		System.out.println(questions);
 		if (questions.contains("（~") && questions.contains("(~")) {
 			return null;
 		} else if (questions.contains("（~")) {
 			return questions.split("（~");
-		} else if (questions.contains("（~")) {
-			return questions.split("（~");
+		} else if (questions.contains("(~")) {
+			return questions.split("[(]~");
 		}
 		return null;
 	}
-	
-	public static String Title(String question){
+
+	public static String Title(String question) {
 		int position = question.indexOf("{~");
 		String title = question.substring(0, position);
 		return title;
@@ -52,7 +53,7 @@ public class Question {
 	public static String Stem(String question) {
 		int spos = question.indexOf("{~");
 		int epos = question.indexOf("A~");
-		String stem = question.substring(spos+2, epos);
+		String stem = question.substring(spos + 2, epos);
 		return stem;
 	}
 
@@ -63,9 +64,9 @@ public class Question {
 		String[] option = question.split("[A-Z]~");
 		List<Map<String, String>> options = new ArrayList<Map<String, String>>();
 		int op = 64;
-		for(int i=1; i<option.length;i++ ){
+		for (int i = 1; i < option.length; i++) {
 			Map<String, String> opA = new HashMap<String, String>();
-			opA.put("optionKey", (char)(op+i)+"" );
+			opA.put("optionKey", (char) (op + i) + "");
 			opA.put("optionValue", option[i]);
 			options.add(opA);
 		}
@@ -76,12 +77,13 @@ public class Question {
 	 * 解析解析
 	 */
 	public static String Analyze(String question) {
+		question = question.substring(0, question.indexOf("答案"));
 		String[] analyze = question.split("[A-Z]~");
 		List<Map<String, String>> analyzes = new ArrayList<Map<String, String>>();
 		int op = 64;
-		for(int i=1; i<analyze.length;i++ ){
+		for (int i = 1; i < analyze.length; i++) {
 			Map<String, String> anA = new HashMap<String, String>();
-			anA.put("analyzeKey", (char)(op+i)+"" );
+			anA.put("analyzeKey", (char) (op + i) + "");
 			anA.put("analyzeValue", analyze[i]);
 			analyzes.add(anA);
 		}
@@ -99,7 +101,7 @@ public class Question {
 	}
 
 	public static void main(String[] args) throws IOException {
-		uploadQuestion("/Users/zp/Downloads/小学数学录入测试题/小学数学录入测试题.txt","");
+		uploadQuestion("/Users/zp/Downloads/question/化学/huaxue录入版/huaxue录入版.txt", "化学");
 	}
 
 	/**
@@ -107,27 +109,35 @@ public class Question {
 	 * 
 	 * @throws IOException
 	 */
-	public static void uploadQuestion(String file,String subject) throws IOException {
+	public static void uploadQuestion(String file, String subject)
+			throws IOException {
 		String[] questions = parseText(file);
 		if (questions != null) {
 			for (int i = 1; i < questions.length; i++) {
-				SingleAnswer sa = new SingleAnswer();
-				String q = questions[i];
-				sa.setTitle(Title(q.split("解析")[0]));
-				System.out.println("分析标题完成");
-				sa.setStem(Stem(q.split("解析")[0]));
-				System.out.println("分析题干完成");
-				sa.setOption(Option(q.split("解析")[0]));
-				System.out.println("分析选项完成");
-				sa.setAnalyze(Analyze(q.split("解析")[1]));
-				System.out.println("分析解析完成");
-				sa.setAnswer(Answer(q));
-				System.out.println("分析答案完成");
-				sa.setType(5);
-				sa.setSubject(subject);
-				sa.setGrade("");
-				post(sa);
-				System.out.println("习题上传完成....");
+				try {
+					
+					SingleAnswer sa = new SingleAnswer();
+					String q = questions[i];
+					System.out.println(q);
+					sa.setTitle(Title(q.split("解析")[0]));
+					System.out.println("分析标题完成");
+					sa.setStem(Stem(q.split("解析")[0]));
+					System.out.println("分析题干完成");
+					sa.setOption(Option(q.split("解析")[0]));
+					System.out.println("分析选项完成");
+					sa.setAnalyze(Analyze(q.split("解析")[1]));
+					System.out.println("分析解析完成");
+					sa.setAnswer(Answer(q));
+					System.out.println("分析答案完成");
+					sa.setType(5);
+					sa.setSubject(subject);
+					sa.setGrade("");
+					post(sa);
+					System.out.println("习题上传完成....");
+				} catch (Exception e) {
+					System.out.println(file + "的第"+ i +"题出现错误,忽略");
+					continue;
+				}
 			}
 		} else {
 			System.out.println(file + "格式错误,无法解析");

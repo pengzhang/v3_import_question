@@ -11,17 +11,21 @@ import java.util.List;
 public class App {
 	public static void main(String[] args) throws IOException {
 		String path = "";
-		if(args.length==0){
+		if (args.length == 0) {
 			path = "/Users/zp/Downloads/question/";
-		}else{
+		} else {
 			path = args[0];
 		}
 		String[] subjects = { "数学", "化学", "物理", "英语" };
 		for (String subject : subjects) {
 			List<File> fs = FileScan.scanFolder(path, subject);
-			for (File file : fs) {
-				String file_txt = FileScan.htmlTotextFile(file);
-				Question.uploadQuestion(file_txt, subject);
+			if (fs.size() > 0) {
+				for (File file : fs) {
+					String file_txt = FileScan.htmlTotextFile(file);
+					Question.uploadQuestion(file_txt, subject);
+				}
+			} else {
+				System.out.println("该"+subject+"学科目录下没有文件");
 			}
 		}
 

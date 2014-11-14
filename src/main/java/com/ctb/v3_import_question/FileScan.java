@@ -25,47 +25,51 @@ public class FileScan {
 	/**
 	 * 扫描目录
 	 */
-	public static List<File> scanFolder(String filePath,String subject) {
-		System.out.println("开始扫描"+ subject + "学科目录:"+filePath+"下的文件");
-		File root = new File(filePath+subject+File.separator);
+	public static List<File> scanFolder(String filePath, String subject) {
+		System.out.println("开始扫描" + subject + "学科目录:" + filePath + "下的文件");
+		File root = new File(filePath + File.separator + subject
+				+ File.separator);
 		File[] files = root.listFiles();
 		List<File> fs = new ArrayList<File>();
-		for (File file : files) {
-			if (file.isFile()&&file.getName().contains(".htm")) {
-				fs.add(file);
+		if (files.length > 0) {
+			for (File file : files) {
+				if (file.isFile() && file.getName().contains(".htm")) {
+					fs.add(file);
+				}
 			}
+		}else{
+			System.out.println("该"+subject+"学科目录下没有文件");
 		}
 		return fs;
 	}
-	
-	
-	public static void main(String[] args){
-		scanFolder("/Users/zp/Downloads/question/","数学");
+
+	public static void main(String[] args) {
+		scanFolder("/Users/zp/Downloads/question/", "数学");
 	}
-	
-	
-	
 
 	/**
 	 * Html文件转带格式的文本
 	 * 
 	 * @throws IOException
 	 */
-	
-	public static String htmlTotextFile(File file) throws IOException{
-		return htmlTotextFile(file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf(File.separator))+File.separator,file.getName().replace(".htm", ""));
+
+	public static String htmlTotextFile(File file) throws IOException {
+		return htmlTotextFile(
+				file.getAbsolutePath().substring(0,
+						file.getAbsolutePath().lastIndexOf(File.separator))
+						+ File.separator, file.getName().replace(".htm", ""));
 	}
-	
+
 	public static String htmlTotextFile(String fPath, String fileName)
 			throws IOException {
 		String filePath = fPath;
-//		if(filePath.charAt(filePath.length()-1)!='/'){
-//			filePath = filePath + File.separator;
-//		}
+		// if(filePath.charAt(filePath.length()-1)!='/'){
+		// filePath = filePath + File.separator;
+		// }
 
 		StringBuilder sb = new StringBuilder();
 
-		Document doc = Jsoup.parse(new File(filePath + fileName+".htm"),
+		Document doc = Jsoup.parse(new File(filePath + fileName + ".htm"),
 				"gb2312");
 		doc.select("table").remove();
 		Elements p_html = doc.select("p");
@@ -100,7 +104,8 @@ public class FileScan {
 		createFolder(folder);
 		System.out.println("创建临时目录" + folder + "完成");
 		writeFile(folder + File.separator + fileName + ".txt", sb.toString());
-		System.out.println("创建带格式的文本" + folder + File.separator + fileName + ".txt完成");
+		System.out.println("创建带格式的文本" + folder + File.separator + fileName
+				+ ".txt完成");
 
 		return folder + File.separator + fileName + ".txt";
 	}
