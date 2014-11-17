@@ -23,13 +23,13 @@ import com.ctb.util.UpYun;
  */
 public class FileScan {
 	
-	public static Logger log = Logger.getLogger(FileScan.class);
+	public Logger log = Logger.getLogger(FileScan.class);
 
 	/**
 	 * 扫描目录
 	 */
 	public static List<File> scanFolder(String filePath, String subject) {
-		log.info("开始扫描" + subject + "学科目录:" + filePath + "下的文件");
+		System.out.println("开始扫描" + subject + "学科目录:" + filePath + "下的文件");
 		File root = new File(filePath + File.separator + subject
 				+ File.separator);
 		File[] files = root.listFiles();
@@ -41,7 +41,7 @@ public class FileScan {
 				}
 			}
 		}else{
-			log.info("该"+subject+"学科目录下没有文件");
+			System.out.println("该"+subject+"学科目录下没有文件");
 		}
 		return fs;
 	}
@@ -81,9 +81,9 @@ public class FileScan {
 		String upload_folder = "resources_v3/"
 				+ p_html.select("img").attr("src").split("/")[0];
 		upyun.mkDir(upload_folder, true);
-		log.info("UpYun 图片目录创建成功");
+		System.out.println("UpYun 图片目录创建成功");
 
-		log.info(fileName + "的图片开始上传....");
+		System.out.println(fileName + "的图片开始上传....");
 		int i = 0;
 		for (Element p : p_html) {
 			if (p.html().contains("img")) {
@@ -94,20 +94,20 @@ public class FileScan {
 							+ URLDecoder.decode(img.attr("src"), "utf-8"));
 					upyun.setContentMD5(UpYun.md5(file));
 					if (upyun.writeFile("/" + img.attr("src"), file, true)) {
-						log.info(fileName + ",图片已上传" + (++i) + "个图片");
+						System.out.println(fileName + ",图片已上传" + (++i) + "个图片");
 					} else {
-						log.info(img.attr("src") + "图片上传失败");
+						System.out.println(img.attr("src") + "图片上传失败");
 					}
 				}
 			}
 			sb.append(p.text());
 		}
-		log.info(fileName + "的图片上传完成");
+		System.out.println(fileName + "的图片上传完成");
 		String folder = filePath + fileName;
 		createFolder(folder);
-		log.info("创建临时目录" + folder + "完成");
+		System.out.println("创建临时目录" + folder + "完成");
 		writeFile(folder + File.separator + fileName + ".txt", sb.toString());
-		log.info("创建带格式的文本" + folder + File.separator + fileName
+		System.out.println("创建带格式的文本" + folder + File.separator + fileName
 				+ ".txt完成");
 
 		return folder + File.separator + fileName + ".txt";

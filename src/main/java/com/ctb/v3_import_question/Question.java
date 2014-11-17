@@ -33,7 +33,7 @@ public class Question {
 	 */
 	public static String[] parseText(String file) throws IOException {
 		String questions = FileUtils.readFileToString(new File(file), "utf-8");
-		log.info(questions);
+		System.out.println(questions);
 		if (questions.contains("（~") && questions.contains("(~")) {
 			return null;
 		} else if (questions.contains("（~")) {
@@ -121,29 +121,29 @@ public class Question {
 					
 					SingleAnswer sa = new SingleAnswer();
 					String q = questions[i];
-					log.info(q);
+					System.out.println(q);
 					sa.setTitle(Title(q.split("解析")[0]));
-					log.info("分析标题完成");
+					System.out.println("分析标题完成");
 					sa.setStem(Stem(q.split("解析")[0]));
-					log.info("分析题干完成");
+					System.out.println("分析题干完成");
 					sa.setOption(Option(q.split("解析")[0]));
-					log.info("分析选项完成");
+					System.out.println("分析选项完成");
 					sa.setAnalyze(Analyze(q.split("解析")[1]));
-					log.info("分析解析完成");
+					System.out.println("分析解析完成");
 					sa.setAnswer(Answer(q));
-					log.info("分析答案完成");
+					System.out.println("分析答案完成");
 					sa.setType(5);
 					sa.setSubject(subject);
 					sa.setGrade("");
-					log.info(post(sa));
-					log.info("习题上传完成....");
+					System.out.println(post(sa));
+					System.out.println("习题上传完成....");
 				} catch (Exception e) {
-					log.info(file + "的第"+ i +"题出现错误,忽略");
+					System.out.println(file + "的第"+ i +"题出现错误,忽略");
 					continue;
 				}
 			}
 		} else {
-			log.info(file + "格式错误,无法解析");
+			System.out.println(file + "格式错误,无法解析");
 		}
 	}
 
