@@ -20,3 +20,4 @@ hs_err_pid*
 #Filter Folder
 bin/
 target/
+*.log

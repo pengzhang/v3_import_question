@@ -15,7 +15,11 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+
+
 public class YFileChooser implements ActionListener{
+	public static File f;
+	
     JFrame frame=new JFrame("错题本题库导入工具");
     JTabbedPane tabPane=new JTabbedPane();//选项卡布局
     Container con=new Container();//布局1
@@ -26,7 +30,7 @@ public class YFileChooser implements ActionListener{
     JButton button2=new JButton("开始导入");
     JFileChooser jfc=new JFileChooser();//文件选择器
     YFileChooser(){
-        jfc.setCurrentDirectory(new File("d:\\"));//文件选择器的初始目录定为d盘
+        jfc.setCurrentDirectory(new File("."));//文件选择器的初始目录定为d盘
         //下面两行是取得屏幕的高度和宽度
         double lx=Toolkit.getDefaultToolkit().getScreenSize().getWidth();
         double ly=Toolkit.getDefaultToolkit().getScreenSize().getHeight();
@@ -51,7 +55,7 @@ public class YFileChooser implements ActionListener{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//使能关闭窗口，结束程序
     }
     public void actionPerformed(ActionEvent e){//事件处理
-    	File f= null;
+    	
         if(e.getSource().equals(button1)){//判断触发方法的按钮是哪个
             jfc.setFileSelectionMode(1);//设定只能选择到文件夹
             int state=jfc.showOpenDialog(null);//此句是打开文件选择器界面的触发语句
