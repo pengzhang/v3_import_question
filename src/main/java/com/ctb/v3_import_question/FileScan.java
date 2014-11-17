@@ -96,7 +96,7 @@ public class FileScan {
 					File file = new File(filePath
 							+ URLDecoder.decode(img.attr("src"), "utf-8"));
 					upyun.setContentMD5(UpYun.md5(file));
-					if (upyun.writeFile("/" + img.attr("src"), file, true)) {
+					if (upyun.writeFile("resources_v3/" + img.attr("src"), file, true)) {
 						System.out.println(fileName + ",图片已上传" + (++i) + "个图片");
 						log.info(fileName + ",图片已上传" + (++i) + "个图片");
 					} else {
