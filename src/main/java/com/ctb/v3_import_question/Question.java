@@ -142,8 +142,9 @@ public class Question {
 					sa.setType(5);
 					sa.setSubject(subject);
 					sa.setGrade("");
-					System.out.println(post(sa));
-					log.info(post(sa));
+					String result = post(sa);
+					System.out.println(result);
+					log.info(result);
 					System.out.println("习题上传完成....");
 					log.info("习题上传完成....");
 				} catch (Exception e) {
