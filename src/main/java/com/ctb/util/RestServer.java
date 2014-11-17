@@ -2,8 +2,10 @@ package com.ctb.util;
 
 import javax.ws.rs.core.MediaType;
 
+import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -37,6 +39,7 @@ public class RestServer {
 	public static Client getClient(){
 		if(c == null){
 			ClientConfig config = new DefaultClientConfig();
+			config.getClasses().add(JacksonJsonProvider.class);
 			config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,Boolean.TRUE);
 			c = Client.create(config);
 		}
@@ -79,6 +82,7 @@ public class RestServer {
 				str = response.getEntity(String.class);
 			} catch (Throwable t){
 				log.info("[post error:]",t);
+				t.printStackTrace();
 				return "POSTRequestError";
 			}
 			

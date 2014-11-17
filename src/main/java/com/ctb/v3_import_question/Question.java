@@ -132,7 +132,7 @@ public class Question {
 					sa.setType(5);
 					sa.setSubject(subject);
 					sa.setGrade("");
-					post(sa);
+					System.out.println(post(sa));
 					System.out.println("习题上传完成....");
 				} catch (Exception e) {
 					System.out.println(file + "的第"+ i +"题出现错误,忽略");
@@ -144,8 +144,8 @@ public class Question {
 		}
 	}
 
-	public static void post(SingleAnswer sa) {
-		RestServer
+	public static String post(SingleAnswer sa) {
+		return RestServer
 				.postRest(
 						"http://centerback.service.iwrong.cn/ctb_v3_center_questionBank/api/create/single-answer.json",
 						sa);
