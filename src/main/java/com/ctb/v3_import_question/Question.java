@@ -117,7 +117,10 @@ public class Question {
 			throws IOException {
 		String[] questions = parseText(file);
 		if (questions != null) {
-			for (int i = 1; i < questions.length; i++) {
+			for (int i = 0; i < questions.length; i++) {
+				if(questions[i] == null || questions[i].equals("")){
+					continue;
+				}
 				try {
 					
 					SingleAnswer sa = new SingleAnswer();
