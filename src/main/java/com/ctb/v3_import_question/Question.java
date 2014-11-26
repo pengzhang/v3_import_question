@@ -105,7 +105,7 @@ public class Question {
 	}
 
 	public static void main(String[] args) throws IOException {
-		uploadQuestion("/Users/zp/Downloads/question/化学/huaxue录入版/huaxue录入版.txt", "化学");
+		uploadQuestion("/Users/zp/Downloads/hx1121.txt", "化学");
 	}
 
 	/**
@@ -127,16 +127,24 @@ public class Question {
 					String q = questions[i];
 					System.out.println(q);
 					log.info(q);
-					sa.setTitle(Title(q.split("解析")[0]));
+					String split_str = "解析";
+					if(q.indexOf("解析:") == -1){
+						split_str += "：";
+					}else{
+						split_str += ":";
+					}
+					System.out.println(split_str);
+					
+					sa.setTitle(Title(q.split(split_str)[0]));
 					System.out.println("分析标题完成");
 					log.info("分析标题完成");
-					sa.setStem(Stem(q.split("解析")[0]));
+					sa.setStem(Stem(q.split(split_str)[0]));
 					System.out.println("分析题干完成");
 					log.info("分析题干完成");
-					sa.setOption(Option(q.split("解析")[0]));
+					sa.setOption(Option(q.split(split_str)[0]));
 					System.out.println("分析选项完成");
 					log.info("分析选项完成");
-					sa.setAnalyze(Analyze(q.split("解析")[1]));
+					sa.setAnalyze(Analyze(q.split(split_str)[1]));
 					System.out.println("分析解析完成");
 					log.info("分析解析完成");
 					sa.setAnswer(Answer(q));
@@ -151,6 +159,7 @@ public class Question {
 					System.out.println("习题上传完成....");
 					log.info("习题上传完成....");
 				} catch (Exception e) {
+					e.printStackTrace();
 					System.out.println(file + "的第"+ i +"题出现错误,忽略");
 					log.info(file + "的第"+ i +"题出现错误,忽略");
 					continue;
