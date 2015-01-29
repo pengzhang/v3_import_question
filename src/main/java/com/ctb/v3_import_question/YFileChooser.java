@@ -82,7 +82,7 @@ public class YFileChooser implements ActionListener{
     public static void execute(String filePath) throws IOException{
     	String path = filePath;
 		System.out.println(path);
-		String[] subjects = { "数学", "化学", "物理", "英语" };
+		String[] subjects = { "数学", "化学", "物理", "英语","语文","生物","历史","地理","政治" };
 		for (String subject : subjects) {
 			List<File> fs = FileScan.scanFolder(path, subject);
 			if (fs.size() > 0) {

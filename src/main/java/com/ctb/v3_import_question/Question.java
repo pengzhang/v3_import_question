@@ -105,7 +105,7 @@ public class Question {
 	}
 
 	public static void main(String[] args) throws IOException {
-		uploadQuestion("/Users/zp/Downloads/hx1121.txt", "化学");
+		uploadQuestion("/Users/zp/Downloads/wl_201411271503.txt", "物理");
 	}
 
 	/**
