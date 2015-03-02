@@ -170,11 +170,11 @@ public class Question {
 			log.info(file + "格式错误,无法解析");
 		}
 	}
-
+//"http://centerback.service.iwrong.cn/ctb_v3_center_questionBank/api/create/single-answer.json",
 	public static String post(SingleAnswer sa) {
 		return RestServer
 				.postRest(
-						"http://centerback.service.iwrong.cn/ctb_v3_center_questionBank/api/create/single-answer.json",
+						"http://product.service.iwrong.cn/iwrong-service-v3/api/create/single-answer.json",
 						sa);
 	}
 }

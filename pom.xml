@@ -4,7 +4,7 @@
 
 	<groupId>com.ctb</groupId>
 	<artifactId>v3_import_question</artifactId>
-	<version>0.0.7-SNAPSHOT</version>
+	<version>0.0.8-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>v3_import_question</name>
