@@ -61,7 +61,7 @@ public class Question {
 		String stem = question.substring(spos + 2, epos);
 		return stem;
 	}
-	
+
 	public static String StemZG(String question) {
 		int spos = question.indexOf("{~");
 		int epos = question.indexOf("答案");
@@ -101,7 +101,15 @@ public class Question {
 		}
 		return Json.toJson(analyzes).toString();
 	}
-	
+
+	public static String AnalyzeZG(String question) {
+		List<Map<String, String>> analyzes = new ArrayList<Map<String, String>>();
+		Map<String, String> anA = new HashMap<String, String>();
+		anA.put("analyzeKey", null);
+		anA.put("analyzeValue", question);
+		analyzes.add(anA);
+		return Json.toJson(analyzes).toString();
+	}
 
 	/**
 	 * 解析答案
@@ -112,7 +120,7 @@ public class Question {
 		m.find();
 		return m.group();
 	}
-	
+
 	public static String AnswerZG(String question) {
 		String split_str = "答案";
 		if (question.indexOf("答案:") == -1) {
@@ -120,11 +128,7 @@ public class Question {
 		} else {
 			split_str += ":";
 		}
-		return question.substring(question.indexOf(split_str));
-	}
-
-	public static void main(String[] args) throws IOException {
-		uploadQuestion("/Users/zp/Downloads/wl_201411271503.txt", "物理");
+		return question.substring(question.indexOf(split_str) + 3);
 	}
 
 	/**
@@ -158,23 +162,25 @@ public class Question {
 					sa.setTitle(Title(q.split(split_str)[0]));
 					System.out.println("分析标题完成");
 					log.info("分析标题完成");
-					
+
 					sa.setStem(StemZG(q.split(split_str)[0]));
 					System.out.println("分析题干完成");
 					log.info("分析题干完成");
-					
+
 					sa.setAnswer(AnswerZG(q.split(split_str)[0]));
 					System.out.println("分析答案完成");
 					log.info("分析答案完成");
-					
-					sa.setAnalyze(q.split(split_str)[1]);
+
+					sa.setAnalyze(AnalyzeZG(q.split(split_str)[1]));
 					System.out.println("分析解析完成");
 					log.info("分析解析完成");
-					
+
 					sa.setType(13);
 					sa.setSubject(subject);
 					sa.setGrade("");
-					String result = post(sa,1);
+					log.info(Json.toJson(sa));
+
+					String result = post(sa, 1);
 					System.out.println(result);
 					log.info(result);
 					System.out.println("主观习题上传完成....");
@@ -236,7 +242,7 @@ public class Question {
 					sa.setType(5);
 					sa.setSubject(subject);
 					sa.setGrade("");
-					String result = post(sa,0);
+					String result = post(sa, 0);
 					System.out.println(result);
 					log.info(result);
 					System.out.println("习题上传完成....");
@@ -259,7 +265,7 @@ public class Question {
 		String xz = "http://product.service.iwrong.cn/iwrong-service-v3/api/create/single-answer.json";
 		String zg = "http://product.service.iwrong.cn/iwrong-service-v3/api/create/subjective-item.json";
 		String url = "";
-		
+
 		switch (op) {
 		case 0:
 			url = xz;
