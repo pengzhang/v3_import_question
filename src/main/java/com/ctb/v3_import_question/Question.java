@@ -13,6 +13,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import com.ctb.entity.SingleAnswer;
+import com.ctb.entity.SubjectiveItem;
 import com.ctb.util.Json;
 import com.ctb.util.RestServer;
 
@@ -23,7 +24,7 @@ import com.ctb.util.RestServer;
  * 
  */
 public class Question {
-	
+
 	public static Logger log = Logger.getLogger(Question.class);
 
 	/**
@@ -60,6 +61,13 @@ public class Question {
 		String stem = question.substring(spos + 2, epos);
 		return stem;
 	}
+	
+	public static String StemZG(String question) {
+		int spos = question.indexOf("{~");
+		int epos = question.indexOf("答案");
+		String stem = question.substring(spos + 2, epos);
+		return stem;
+	}
 
 	/**
 	 * 解析选项
@@ -93,6 +101,7 @@ public class Question {
 		}
 		return Json.toJson(analyzes).toString();
 	}
+	
 
 	/**
 	 * 解析答案
@@ -103,9 +112,84 @@ public class Question {
 		m.find();
 		return m.group();
 	}
+	
+	public static String AnswerZG(String question) {
+		String split_str = "答案";
+		if (question.indexOf("答案:") == -1) {
+			split_str += "：";
+		} else {
+			split_str += ":";
+		}
+		return question.substring(question.indexOf(split_str));
+	}
 
 	public static void main(String[] args) throws IOException {
 		uploadQuestion("/Users/zp/Downloads/wl_201411271503.txt", "物理");
+	}
+
+	/**
+	 * 上传主观题
+	 * 
+	 * @param file
+	 * @param subject
+	 * @throws IOException
+	 */
+	public static void uploadZGQuestion(String file, String subject) throws IOException {
+		String[] questions = parseText(file);
+		if (questions != null) {
+			for (int i = 0; i < questions.length; i++) {
+				if (questions[i] == null || questions[i].equals("")) {
+					continue;
+				}
+				try {
+
+					SubjectiveItem sa = new SubjectiveItem();
+					String q = questions[i];
+					System.out.println(q);
+					log.info(q);
+					String split_str = "解析";
+					if (q.indexOf("解析:") == -1) {
+						split_str += "：";
+					} else {
+						split_str += ":";
+					}
+					System.out.println(split_str);
+
+					sa.setTitle(Title(q.split(split_str)[0]));
+					System.out.println("分析标题完成");
+					log.info("分析标题完成");
+					
+					sa.setStem(StemZG(q.split(split_str)[0]));
+					System.out.println("分析题干完成");
+					log.info("分析题干完成");
+					
+					sa.setAnswer(AnswerZG(q.split(split_str)[0]));
+					System.out.println("分析答案完成");
+					log.info("分析答案完成");
+					
+					sa.setAnalyze(q.split(split_str)[1]);
+					System.out.println("分析解析完成");
+					log.info("分析解析完成");
+					
+					sa.setType(13);
+					sa.setSubject(subject);
+					sa.setGrade("");
+					String result = post(sa,1);
+					System.out.println(result);
+					log.info(result);
+					System.out.println("主观习题上传完成....");
+					log.info("主观习题上传完成....");
+				} catch (Exception e) {
+					e.printStackTrace();
+					System.out.println(file + "的第" + i + "题出现错误,忽略");
+					log.info(file + "的第" + i + "题出现错误,忽略");
+					continue;
+				}
+			}
+		} else {
+			System.out.println(file + "格式错误,无法解析");
+			log.info(file + "格式错误,无法解析");
+		}
 	}
 
 	/**
@@ -113,28 +197,27 @@ public class Question {
 	 * 
 	 * @throws IOException
 	 */
-	public static void uploadQuestion(String file, String subject)
-			throws IOException {
+	public static void uploadQuestion(String file, String subject) throws IOException {
 		String[] questions = parseText(file);
 		if (questions != null) {
 			for (int i = 0; i < questions.length; i++) {
-				if(questions[i] == null || questions[i].equals("")){
+				if (questions[i] == null || questions[i].equals("")) {
 					continue;
 				}
 				try {
-					
+
 					SingleAnswer sa = new SingleAnswer();
 					String q = questions[i];
 					System.out.println(q);
 					log.info(q);
 					String split_str = "解析";
-					if(q.indexOf("解析:") == -1){
+					if (q.indexOf("解析:") == -1) {
 						split_str += "：";
-					}else{
+					} else {
 						split_str += ":";
 					}
 					System.out.println(split_str);
-					
+
 					sa.setTitle(Title(q.split(split_str)[0]));
 					System.out.println("分析标题完成");
 					log.info("分析标题完成");
@@ -153,15 +236,15 @@ public class Question {
 					sa.setType(5);
 					sa.setSubject(subject);
 					sa.setGrade("");
-					String result = post(sa);
+					String result = post(sa,0);
 					System.out.println(result);
 					log.info(result);
 					System.out.println("习题上传完成....");
 					log.info("习题上传完成....");
 				} catch (Exception e) {
 					e.printStackTrace();
-					System.out.println(file + "的第"+ i +"题出现错误,忽略");
-					log.info(file + "的第"+ i +"题出现错误,忽略");
+					System.out.println(file + "的第" + i + "题出现错误,忽略");
+					log.info(file + "的第" + i + "题出现错误,忽略");
 					continue;
 				}
 			}
@@ -170,11 +253,21 @@ public class Question {
 			log.info(file + "格式错误,无法解析");
 		}
 	}
-//"http://centerback.service.iwrong.cn/ctb_v3_center_questionBank/api/create/single-answer.json",
-	public static String post(SingleAnswer sa) {
-		return RestServer
-				.postRest(
-						"http://product.service.iwrong.cn/iwrong-service-v3/api/create/single-answer.json",
-						sa);
+
+	// "http://centerback.service.iwrong.cn/ctb_v3_center_questionBank/api/create/single-answer.json",
+	public static String post(Object sa, int op) {
+		String xz = "http://product.service.iwrong.cn/iwrong-service-v3/api/create/single-answer.json";
+		String zg = "http://product.service.iwrong.cn/iwrong-service-v3/api/create/subjective-item.json";
+		String url = "";
+		
+		switch (op) {
+		case 0:
+			url = xz;
+			break;
+		case 1:
+			url = zg;
+			break;
+		}
+		return RestServer.postRest(url, sa);
 	}
 }

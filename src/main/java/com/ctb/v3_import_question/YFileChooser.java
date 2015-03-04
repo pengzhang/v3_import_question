@@ -82,18 +82,22 @@ public class YFileChooser implements ActionListener{
     public static void execute(String filePath) throws IOException{
     	String path = filePath;
 		System.out.println(path);
-		String[] subjects = { "数学", "化学", "物理", "英语","语文","生物","历史","地理","政治" };
+		String[] subjects = { "数学", "化学", "物理", "英语","语文","生物","历史","地理","政治","主观数学", "主观化学", "主观物理", "主观英语","主观语文","主观生物","主观历史","主观地理","主观政治" };
 		for (String subject : subjects) {
 			List<File> fs = FileScan.scanFolder(path, subject);
 			if (fs.size() > 0) {
 				for (File file : fs) {
 					String file_txt = FileScan.htmlTotextFile(file);
-					Question.uploadQuestion(file_txt, subject);
+					if(subject.contains("主观")){
+						Question.uploadZGQuestion(file_txt, subject.substring(2));
+					}else{
+						Question.uploadQuestion(file_txt, subject);
+					}
 				}
 			} else {
 				System.out.println("该"+subject+"学科目录下没有文件");
 			}
 		}
     }
-
+    
 }
